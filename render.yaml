@@ -1,0 +1,33 @@
+# Render Blueprint: a PostgreSQL database plus the Django web service.
+# In Render: New + > Blueprint > pick this repository.
+databases:
+  - name: wedsync-db
+    plan: free
+    databaseName: wedsync
+    user: wedsync
+
+services:
+  - type: web
+    name: wedsync
+    runtime: python
+    plan: free
+    buildCommand: ./build.sh
+    startCommand: gunicorn config.wsgi:application
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: wedsync-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      - key: WEB_CONCURRENCY
+        value: "4"
+      # First administrator, created on deploy. Fill these in the Render dashboard.
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: ADMIN_FULL_NAME
+        sync: false
