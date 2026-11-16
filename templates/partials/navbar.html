@@ -1,0 +1,29 @@
+{% with ns=request.resolver_match.namespace url_name=request.resolver_match.url_name %}
+<nav class="ws-nav" aria-label="Main">
+  <div class="ws-container ws-nav__inner">
+    {% url 'dashboards:home' as home_url %}{% include "partials/logo.html" with on_dark=True href=home_url %}
+    <div class="ws-nav__links">
+      {% if user.role == "ADMIN" %}
+        <a class="ws-nav__link{% if ns == 'adminpanel' and url_name == 'overview' %} is-active{% endif %}" href="{% url 'adminpanel:overview' %}"{% if ns == 'adminpanel' and url_name == 'overview' %} aria-current="page"{% endif %}>Overview</a>
+        <a class="ws-nav__link{% if ns == 'adminpanel' and url_name != 'overview' %} is-active{% endif %}" href="{% url 'adminpanel:user_list' %}"{% if ns == 'adminpanel' and url_name != 'overview' %} aria-current="page"{% endif %}>Users</a>
+      {% else %}
+        {% if user.role == "COUPLE" %}{% url 'dashboards:couple' as dash_url %}{% elif user.role == "COORDINATOR" %}{% url 'dashboards:coordinator' as dash_url %}{% else %}{% url 'dashboards:vendor' as dash_url %}{% endif %}
+        <a class="ws-nav__link{% if ns == 'dashboards' %} is-active{% endif %}" href="{{ dash_url }}"{% if ns == 'dashboards' %} aria-current="page"{% endif %}>{% if user.role == "COUPLE" %}My wedding{% elif user.role == "COORDINATOR" %}Weddings{% else %}Bookings{% endif %}</a>
+      {% endif %}
+      <a class="ws-nav__link{% if ns == 'accounts' %} is-active{% endif %}" href="{% url 'accounts:profile' %}"{% if ns == 'accounts' %} aria-current="page"{% endif %}>Profile</a>
+    </div>
+    <div class="ws-nav__user">
+      {% include "partials/theme_toggle.html" %}
+      <span class="ws-avatar" aria-hidden="true">{{ user.initials }}</span>
+      <span class="ws-nav__who">
+        <span class="ws-nav__name">{{ user.full_name }}</span>
+        <span class="ws-badge ws-badge--{{ user.role|lower }}">{{ user.get_role_display }}</span>
+      </span>
+      <form method="post" action="{% url 'accounts:logout' %}" data-no-pending>
+        {% csrf_token %}
+        <button class="ws-btn ws-btn--ghost ws-btn--sm" type="submit">Log out</button>
+      </form>
+    </div>
+  </div>
+</nav>
+{% endwith %}

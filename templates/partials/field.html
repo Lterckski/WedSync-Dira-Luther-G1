@@ -1,0 +1,6 @@
+{% load ws_forms %}<div class="ws-field{% if field.errors %} is-invalid{% endif %}">
+  <label class="ws-label" for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %}<span class="ws-req" aria-hidden="true">*</span>{% else %} <span class="ws-optional">(optional)</span>{% endif %}</label>
+  {% ws_widget field %}
+  {% if field.help_text %}<p class="ws-help" id="{{ field.auto_id }}_help">{{ field.help_text }}</p>{% endif %}
+  {% for error in field.errors %}<p class="ws-field-error" id="{{ field.auto_id }}_error{% if not forloop.first %}{{ forloop.counter0 }}{% endif %}">{% include "icons/error.svg" with icon_class="" %}{{ error }}</p>{% endfor %}
+</div>

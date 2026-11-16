@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block body %}
+<a class="ws-skip" href="#main">Skip to content</a>
+{% include "partials/navbar.html" %}
+<main id="main" class="ws-main" tabindex="-1">
+  <div class="ws-container">
+    {% if messages %}<div class="ws-alerts-slot" data-alerts-slot>{% include "partials/messages.html" %}</div>{% endif %}
+    {% block content %}{% endblock %}
+  </div>
+</main>
+<footer class="ws-footer">
+  <div class="ws-container">WedSync · CSIT327 Information Management 2</div>
+</footer>
+{% endblock %}

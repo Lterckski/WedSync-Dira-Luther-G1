@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load static %}
+{% block body %}
+<div class="ws-auth">
+  <aside class="ws-auth__panel">
+    {% include "partials/logo.html" with on_dark=True %}
+    <div>
+      <img class="ws-auth__mark" src="{% static 'img/wedsync-mark-dark.png' %}" alt="" width="112" height="112">
+      <p class="ws-auth__headline">{% block panel_headline %}Plan it once.<br>Run it live.{% endblock %}</p>
+      <p class="ws-auth__copy">{% block panel_copy %}Budgets, vendors, guests and the day-of timeline — one workspace for couples, coordinators and vendors.{% endblock %}</p>
+    </div>
+    <p class="ws-auth__foot">CSIT327 · Information Management 2</p>
+  </aside>
+  <main class="ws-auth__main" id="main">
+    <div class="ws-auth__top">{% include "partials/theme_toggle.html" with on_light=True %}</div>
+    <div class="ws-auth__card{% block card_class %}{% endblock %}">
+      {% include "partials/logo.html" with extra_class="ws-auth__brand" %}
+      {% block content %}{% endblock %}
+    </div>
+  </main>
+</div>
+{% endblock %}

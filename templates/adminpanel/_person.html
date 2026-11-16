@@ -1,0 +1,7 @@
+<div class="ws-table__person">
+  <span class="ws-avatar" aria-hidden="true">{{ person.initials }}</span>
+  <div style="min-width:0">
+    <a class="ws-table__name" href="{% url 'adminpanel:user_edit' person.pk %}">{{ person.full_name }}</a>
+    <div class="ws-table__email">{{ person.email }}</div>
+  </div>
+</div>

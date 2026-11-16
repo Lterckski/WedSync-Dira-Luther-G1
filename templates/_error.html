@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="ws-landing">
+  <header class="ws-container ws-landing__bar">
+    {% include "partials/logo.html" %}
+    <div class="ws-landing__actions">{% include "partials/theme_toggle.html" with on_light=True %}</div>
+  </header>
+  <main class="ws-container" id="main">
+    <div class="ws-error ws-stack" style="gap:var(--space-4)">
+      <p class="ws-error__code">{% block code %}{% endblock %}</p>
+      <h1 class="ws-page-title">{% block heading %}{% endblock %}</h1>
+      <p class="ws-page-lede">{% block message %}{% endblock %}</p>
+      <div class="ws-form-actions">{% block actions %}<a class="ws-btn ws-btn--primary" href="/">Go to the home page</a>{% endblock %}</div>
+    </div>
+  </main>
+</div>
+{% endblock %}

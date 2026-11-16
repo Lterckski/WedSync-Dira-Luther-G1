@@ -52,6 +52,65 @@
     }
   });
 
+  // Alerts: every message has a close button; success and info messages also close
+  // themselves after a few seconds. The timer pauses while the pointer or focus is on them.
+  // Errors and warnings stay until closed so nobody misses why something failed.
+  var AUTO_DISMISS_MS = 5000;
+
+  function dismissAlert(alert, moveFocus) {
+    if (!alert || alert.classList.contains("is-leaving")) return;
+    alert.classList.add("is-leaving");
+    window.setTimeout(function () {
+      var list = alert.parentElement;
+      alert.remove();
+      if (list && list.hasAttribute("data-alerts") && !list.children.length) {
+        var slot = list.parentElement;
+        list.remove();
+        if (slot && slot.hasAttribute("data-alerts-slot") && !slot.children.length) slot.remove();
+      }
+      if (moveFocus) {
+        var main = document.getElementById("main");
+        if (main) main.focus({ preventScroll: true });
+      }
+    }, 220);
+  }
+
+  document.addEventListener("click", function (event) {
+    var close = event.target.closest("[data-alert-close]");
+    if (close) dismissAlert(close.closest(".ws-alert"), true);
+  });
+
+  document.querySelectorAll("[data-autodismiss]").forEach(function (alert) {
+    var remaining = AUTO_DISMISS_MS;
+    var startedAt = 0;
+    var timer = null;
+    var holds = 0; // pointer and focus can both hold the alert open
+
+    function start() {
+      if (timer || holds > 0) return;
+      startedAt = Date.now();
+      timer = window.setTimeout(function () { dismissAlert(alert, false); }, remaining);
+    }
+    function hold() {
+      holds += 1;
+      if (timer) {
+        window.clearTimeout(timer);
+        timer = null;
+        remaining = Math.max(1500, remaining - (Date.now() - startedAt));
+      }
+    }
+    function release() {
+      holds = Math.max(0, holds - 1);
+      start();
+    }
+
+    alert.addEventListener("mouseenter", hold);
+    alert.addEventListener("mouseleave", release);
+    alert.addEventListener("focusin", hold);
+    alert.addEventListener("focusout", release);
+    start();
+  });
+
   // Coming back with the browser's Back button restores the page as it was: undo the pending state.
   window.addEventListener("pageshow", function (event) {
     if (!event.persisted) return;

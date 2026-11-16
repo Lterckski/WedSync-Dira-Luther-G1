@@ -1,0 +1,74 @@
+{% extends "layouts/app.html" %}
+{% block title %}{{ member.full_name }}{% endblock %}
+{% block content %}
+<header class="ws-page-head">
+  <div style="display:flex;align-items:center;gap:var(--space-4);min-width:0">
+    <span class="ws-avatar ws-avatar--lg" aria-hidden="true">{{ member.initials }}</span>
+    <div style="min-width:0">
+      <p class="ws-eyebrow"><a href="{% url 'adminpanel:user_list' %}">Users</a></p>
+      <h1 class="ws-page-title">{{ member.full_name }}</h1>
+      <p class="ws-muted" style="margin-top:var(--space-1)">
+        <span class="ws-badge ws-badge--{{ member.role|lower }}">{{ member.get_role_display }}</span>
+        {% if member.is_active %}<span class="ws-badge ws-badge--success">Active</span>{% else %}<span class="ws-badge ws-badge--neutral">Deactivated</span>{% endif %}
+        &nbsp;Joined {{ member.created_at|date:"j F Y" }}
+      </p>
+    </div>
+  </div>
+</header>
+<div class="ws-split">
+  <section class="ws-card" aria-labelledby="edit-title">
+    <header class="ws-card__header"><h2 class="ws-card__title" id="edit-title">Account details</h2></header>
+    <form method="post" novalidate>
+      {% csrf_token %}
+      <div class="ws-card__body ws-form">
+        {% include "partials/form_errors.html" %}
+        {% include "partials/field.html" with field=form.full_name %}
+        <div class="ws-row">
+          {% include "partials/field.html" with field=form.email %}
+          {% include "partials/field.html" with field=form.phone %}
+        </div>
+        {% include "partials/field.html" with field=form.role %}
+        <div class="ws-field">
+          <label class="ws-label" style="display:flex;gap:var(--space-2);align-items:center;font-weight:500">
+            {{ form.is_active }} {{ form.is_active.label }}
+          </label>
+          <p class="ws-help">{% if form.editing_self %}You can't deactivate your own account.{% else %}{{ form.is_active.help_text }}{% endif %}</p>
+        </div>
+      </div>
+      <footer class="ws-card__footer">
+        <a class="ws-btn ws-btn--secondary" href="{% url 'adminpanel:user_list' %}">Back to users</a>
+        <button class="ws-btn ws-btn--primary" type="submit" data-pending-label="Saving…">Save changes</button>
+      </footer>
+    </form>
+  </section>
+  <aside class="ws-stack">
+    <section class="ws-card" aria-labelledby="access-title">
+      <header class="ws-card__header"><h2 class="ws-card__title" id="access-title">Access</h2></header>
+      <div class="ws-card__body ws-stack" style="gap:var(--space-4)">
+        {% if member.pk == user.pk %}
+          <p class="ws-muted">This is your account. Another administrator has to deactivate it.</p>
+        {% elif member.is_active %}
+          <p class="ws-muted">Deactivating blocks log-in immediately. You can reactivate the account any time.</p>
+          <form method="post" action="{% url 'adminpanel:user_toggle_active' member.pk %}">
+            {% csrf_token %}
+            <button class="ws-btn ws-btn--danger ws-btn--block" type="submit" data-pending-label="Deactivating…">Deactivate {{ member.get_short_name }}</button>
+          </form>
+        {% else %}
+          <p class="ws-muted">This account can't log in.</p>
+          <form method="post" action="{% url 'adminpanel:user_toggle_active' member.pk %}">
+            {% csrf_token %}
+            <button class="ws-btn ws-btn--dark ws-btn--block" type="submit" data-pending-label="Reactivating…">Reactivate {{ member.get_short_name }}</button>
+          </form>
+        {% endif %}
+      </div>
+    </section>
+    <section class="ws-card" aria-labelledby="password-title">
+      <header class="ws-card__header"><h2 class="ws-card__title" id="password-title">Password</h2></header>
+      <div class="ws-card__body ws-stack" style="gap:var(--space-4)">
+        <p class="ws-muted">Passwords are stored as secure hashes and can't be viewed. You can set a new one if they're locked out.</p>
+        <a class="ws-btn ws-btn--secondary" href="{% url 'adminpanel:user_set_password' member.pk %}">Set a new password</a>
+      </div>
+    </section>
+  </aside>
+</div>
+{% endblock %}

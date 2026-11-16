@@ -1,0 +1,39 @@
+{% extends "layouts/auth.html" %}
+{% block title %}Create an account{% endblock %}
+{% block card_class %} ws-auth__card--wide{% endblock %}
+{% block content %}
+<p class="ws-eyebrow">Get started</p>
+<h1 class="ws-auth__title">Create your account</h1>
+<p class="ws-auth__switch">Already have one? <a href="{% url 'accounts:login' %}">Log in</a></p>
+<div class="ws-stack" style="gap: var(--space-4)">
+  {% include "partials/messages.html" %}
+  {% include "partials/form_errors.html" %}
+  <form class="ws-form" method="post" novalidate>
+    {% csrf_token %}
+    <fieldset class="ws-field{% if form.role.errors %} is-invalid{% endif %}" style="border:0;margin:0;padding:0;min-width:0">
+      <legend class="ws-label" style="padding:0;margin-bottom:var(--space-2)">{{ form.role.label }}<span class="ws-req" aria-hidden="true">*</span></legend>
+      <div class="ws-choices">
+        {% for option in form.role_options %}
+        <label class="ws-choice">
+          <input type="radio" name="{{ form.role.html_name }}" value="{{ option.value }}" required{% if form.role.value == option.value %} checked{% endif %}{% if form.role.errors %} aria-invalid="true" aria-describedby="id_role_error"{% endif %}>
+          <span class="ws-choice__title">{{ option.label }}</span>
+          <span class="ws-choice__text">{{ option.description }}</span>
+        </label>
+        {% endfor %}
+      </div>
+      {% for error in form.role.errors %}<p class="ws-field-error" id="id_role_error">{% include "icons/error.svg" with icon_class="" %}{{ error }}</p>{% endfor %}
+    </fieldset>
+    {% include "partials/field.html" with field=form.full_name %}
+    <div class="ws-row">
+      {% include "partials/field.html" with field=form.email %}
+      {% include "partials/field.html" with field=form.phone %}
+    </div>
+    <div class="ws-row">
+      {% include "partials/field.html" with field=form.password1 %}
+      {% include "partials/field.html" with field=form.password2 %}
+    </div>
+    <p class="ws-form-note">Fields marked with an asterisk (*) are required.</p>
+    <button class="ws-btn ws-btn--primary ws-btn--lg ws-btn--block" type="submit" data-pending-label="Creating your account…">Create account</button>
+  </form>
+</div>
+{% endblock %}

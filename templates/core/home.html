@@ -5,14 +5,37 @@
 <div class="ws-landing">
   <header class="ws-container ws-landing__bar">
     {% include "partials/logo.html" %}
-    <div class="ws-landing__actions">{% include "partials/theme_toggle.html" with on_light=True %}</div>
+    <nav class="ws-landing__actions" aria-label="Account">
+      {% include "partials/theme_toggle.html" with on_light=True %}
+      {% if user.is_authenticated %}
+        <a class="ws-btn ws-btn--primary ws-btn--sm" href="{% url 'dashboards:home' %}">Go to your dashboard</a>
+      {% else %}
+        <a class="ws-btn ws-btn--ghost ws-btn--sm" href="{% url 'accounts:login' %}">Log in</a>
+        <a class="ws-btn ws-btn--primary ws-btn--sm" href="{% url 'accounts:register' %}">Create account</a>
+      {% endif %}
+    </nav>
   </header>
-  <main class="ws-container ws-hero">
-    <div>
-      <h1 class="ws-hero__title">Plan it once. <span>Run it live.</span></h1>
-      <p class="ws-hero__lede">One workspace where couples, coordinators and vendors share the budget, the guest list and the day-of timeline.</p>
-    </div>
-    <div class="ws-hero__art" aria-hidden="true"><img src="{% static 'img/wedsync-mark-dark.png' %}" alt=""></div>
+  <main class="ws-container ws-landing__main" id="main">
+    <section class="ws-hero">
+      <div>
+        <h1 class="ws-hero__title">Plan it once. <span>Run it live.</span></h1>
+        <p class="ws-hero__lede">One workspace where couples, coordinators and vendors share the budget, the guest list and the day-of timeline.</p>
+        <div class="ws-hero__actions">
+          {% if user.is_authenticated %}
+            <a class="ws-btn ws-btn--primary ws-btn--lg" href="{% url 'dashboards:home' %}">Go to your dashboard</a>
+          {% else %}
+            <a class="ws-btn ws-btn--primary ws-btn--lg" href="{% url 'accounts:register' %}">Create an account</a>
+            <a class="ws-btn ws-btn--secondary ws-btn--lg" href="{% url 'accounts:login' %}">Log in</a>
+          {% endif %}
+        </div>
+      </div>
+      <div class="ws-hero__art" aria-hidden="true"><img src="{% static 'img/wedsync-mark-dark.png' %}" alt="" width="256" height="256"></div>
+    </section>
+    <section class="ws-roles" aria-label="Who WedSync is for">
+      <div class="ws-role"><p class="ws-role__name">Couples</p><p class="ws-role__text">Keep the budget, guests and vendors in one place.</p></div>
+      <div class="ws-role"><p class="ws-role__name">Coordinators</p><p class="ws-role__text">Run every wedding from one schedule.</p></div>
+      <div class="ws-role"><p class="ws-role__name">Vendors</p><p class="ws-role__text">Know your bookings and your call times.</p></div>
+    </section>
   </main>
 </div>
 {% endblock %}
