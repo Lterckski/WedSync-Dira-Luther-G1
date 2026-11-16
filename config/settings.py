@@ -5,6 +5,7 @@ Configuration comes from environment variables (see .env.example).
 The database must be PostgreSQL (local, Render, or Supabase); SQLite is not supported.
 """
 import os
+import sys
 from pathlib import Path
 
 import dj_database_url
@@ -31,6 +32,7 @@ def env_list(name, default=""):
 # Core
 # ---------------------------------------------------------------------------
 DEBUG = env_bool("DEBUG", False)
+TESTING = len(sys.argv) > 1 and sys.argv[1] == "test"
 
 SECRET_KEY = os.environ.get("SECRET_KEY", "")
 if not SECRET_KEY:
@@ -56,8 +58,10 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "accounts",
     "core",
+    "accounts",
+    "dashboards",
+    "adminpanel",
 ]
 
 MIDDLEWARE = [
@@ -118,12 +122,12 @@ DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 AUTH_USER_MODEL = "accounts.User"
 
 AUTH_PASSWORD_VALIDATORS = [
-    {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
+    {"NAME": "accounts.password_validators.UserAttributeSimilarityValidator",
      "OPTIONS": {"user_attributes": ("email", "full_name")}},
-    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+    {"NAME": "accounts.password_validators.MinimumLengthValidator",
      "OPTIONS": {"min_length": 8}},
-    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
-    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
+    {"NAME": "accounts.password_validators.CommonPasswordValidator"},
+    {"NAME": "accounts.password_validators.NumericPasswordValidator"},
 ]
 
 LOGIN_URL = "accounts:login"
@@ -150,7 +154,7 @@ STORAGES = {
     "staticfiles": {
         "BACKEND": (
             "django.contrib.staticfiles.storage.StaticFilesStorage"
-            if DEBUG
+            if DEBUG or TESTING
             else "whitenoise.storage.CompressedManifestStaticFilesStorage"
         )
     },
@@ -177,7 +181,7 @@ X_FRAME_OPTIONS = "DENY"
 SECURE_CONTENT_TYPE_NOSNIFF = True
 SECURE_REFERRER_POLICY = "same-origin"
 
-if not DEBUG:
+if not DEBUG and not TESTING:
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
     SECURE_SSL_REDIRECT = env_bool("SECURE_SSL_REDIRECT", True)
     SESSION_COOKIE_SECURE = True

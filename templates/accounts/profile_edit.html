@@ -1,0 +1,30 @@
+{% extends "layouts/app.html" %}
+{% block title %}Edit profile{% endblock %}
+{% block content %}
+<header class="ws-page-head">
+  <div>
+    <p class="ws-eyebrow"><a href="{% url 'accounts:profile' %}">Your profile</a></p>
+    <h1 class="ws-page-title">Edit profile</h1>
+  </div>
+</header>
+<section class="ws-card" style="max-width:640px" aria-label="Profile details">
+  <form method="post" novalidate>
+    {% csrf_token %}
+    <div class="ws-card__body ws-form">
+      {% include "partials/form_errors.html" %}
+      {% include "partials/field.html" with field=form.full_name %}
+      {% include "partials/field.html" with field=form.email %}
+      {% include "partials/field.html" with field=form.phone %}
+      <div class="ws-field">
+        <label class="ws-label" for="role-readonly">Role</label>
+        <input class="ws-input" id="role-readonly" type="text" value="{{ user.get_role_display }}" readonly aria-describedby="role-readonly-help">
+        <p class="ws-help" id="role-readonly-help">Your role is set when you register. Ask an administrator if it needs to change.</p>
+      </div>
+    </div>
+    <footer class="ws-card__footer">
+      <a class="ws-btn ws-btn--secondary" href="{% url 'accounts:profile' %}">Cancel</a>
+      <button class="ws-btn ws-btn--primary" type="submit" data-pending-label="Saving…">Save changes</button>
+    </footer>
+  </form>
+</section>
+{% endblock %}

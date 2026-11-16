@@ -1,0 +1,76 @@
+{% extends "layouts/app.html" %}
+{% block title %}Users{% endblock %}
+{% block content %}
+<header class="ws-page-head">
+  <div>
+    <p class="ws-eyebrow">User management</p>
+    <h1 class="ws-page-title">Users</h1>
+  </div>
+  <a class="ws-btn ws-btn--primary" href="{% url 'adminpanel:user_create' %}">Create account</a>
+</header>
+<section class="ws-card" aria-label="All users">
+  <form class="ws-toolbar" method="get" role="search" data-no-pending>
+    <div class="ws-field">
+      <label class="ws-label" for="q">Search</label>
+      <input class="ws-input" id="q" name="q" type="search" value="{{ query }}" placeholder="Name or email" spellcheck="false">
+    </div>
+    <div class="ws-field ws-field--narrow">
+      <label class="ws-label" for="role">Role</label>
+      <select class="ws-input" id="role" name="role">
+        <option value="">All roles</option>
+        {% for value, label in roles %}<option value="{{ value }}"{% if value == role %} selected{% endif %}>{{ label }}</option>{% endfor %}
+      </select>
+    </div>
+    <div class="ws-field ws-field--narrow">
+      <label class="ws-label" for="status">Status</label>
+      <select class="ws-input" id="status" name="status">
+        <option value="">Any status</option>
+        <option value="active"{% if status == "active" %} selected{% endif %}>Active</option>
+        <option value="inactive"{% if status == "inactive" %} selected{% endif %}>Deactivated</option>
+      </select>
+    </div>
+    <div class="ws-form-actions">
+      <button class="ws-btn ws-btn--secondary" type="submit">Apply filters</button>
+      {% if filters_active %}<a class="ws-btn ws-btn--ghost" href="{% url 'adminpanel:user_list' %}">Clear filters</a>{% endif %}
+    </div>
+  </form>
+  {% if page.object_list %}
+  <div class="ws-table-wrap">
+    <table class="ws-table">
+      <thead><tr><th scope="col">Person</th><th scope="col">Role</th><th scope="col">Status</th><th scope="col">Contact number</th><th scope="col">Joined</th><th scope="col"><span class="ws-sr-only">Actions</span></th></tr></thead>
+      <tbody>
+        {% for person in page.object_list %}
+        <tr>
+          <td>{% include "adminpanel/_person.html" %}</td>
+          <td><span class="ws-badge ws-badge--{{ person.role|lower }}">{{ person.get_role_display }}</span></td>
+          <td>{% if person.is_active %}<span class="ws-badge ws-badge--success">Active</span>{% else %}<span class="ws-badge ws-badge--neutral">Deactivated</span>{% endif %}</td>
+          <td class="ws-num">{{ person.phone|default:"—" }}</td>
+          <td class="ws-num">{{ person.created_at|date:"j M Y" }}</td>
+          <td style="text-align:right"><a class="ws-btn ws-btn--secondary ws-btn--sm" href="{% url 'adminpanel:user_edit' person.pk %}">Manage<span class="ws-sr-only"> {{ person.full_name }}</span></a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <nav class="ws-pagination" aria-label="Pages">
+    <span>Showing {{ page.start_index }}–{{ page.end_index }} of {{ page.paginator.count }}</span>
+    <span class="ws-pagination__links">
+      {% if page.has_previous %}<a class="ws-btn ws-btn--secondary ws-btn--sm" href="?{% if querystring %}{{ querystring }}&amp;{% endif %}page={{ page.previous_page_number }}">Previous page</a>{% endif %}
+      {% if page.has_next %}<a class="ws-btn ws-btn--secondary ws-btn--sm" href="?{% if querystring %}{{ querystring }}&amp;{% endif %}page={{ page.next_page_number }}">Next page</a>{% endif %}
+    </span>
+  </nav>
+  {% else %}
+  <div class="ws-empty">
+    {% if filters_active %}
+      <p class="ws-empty__title">No users match these filters</p>
+      <p class="ws-empty__text">{% if query %}Nothing found for “{{ query }}”. {% endif %}Try another search or clear the filters.</p>
+      <a class="ws-btn ws-btn--secondary" href="{% url 'adminpanel:user_list' %}">Clear filters</a>
+    {% else %}
+      <p class="ws-empty__title">No users yet</p>
+      <p class="ws-empty__text">Accounts appear here as people register or as you create them.</p>
+      <a class="ws-btn ws-btn--primary" href="{% url 'adminpanel:user_create' %}">Create account</a>
+    {% endif %}
+  </div>
+  {% endif %}
+</section>
+{% endblock %}

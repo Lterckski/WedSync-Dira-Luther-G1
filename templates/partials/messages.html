@@ -1,9 +1,12 @@
 {% if messages %}
-<div class="ws-alerts">
+<div class="ws-alerts" data-alerts>
   {% for message in messages %}
-  <div class="ws-alert ws-alert--{{ message.tags|default:'info' }}" role="{% if message.level >= 40 %}alert{% else %}status{% endif %}">
+  <div class="ws-alert ws-alert--{{ message.tags|default:'info' }}" role="{% if message.level >= 40 %}alert{% else %}status{% endif %}"{% if message.level < 30 %} data-autodismiss{% endif %}>
     {% if message.tags == "success" %}{% include "icons/success.svg" %}{% elif message.tags == "error" %}{% include "icons/error.svg" %}{% elif message.tags == "warning" %}{% include "icons/warning.svg" %}{% else %}{% include "icons/info.svg" %}{% endif %}
-    <div>{{ message }}</div>
+    <div class="ws-alert__body">{{ message }}</div>
+    <button type="button" class="ws-alert__close" data-alert-close aria-label="Dismiss message" title="Dismiss">
+      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
   </div>
   {% endfor %}
 </div>

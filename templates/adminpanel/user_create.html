@@ -1,0 +1,35 @@
+{% extends "layouts/app.html" %}
+{% block title %}Create account{% endblock %}
+{% block content %}
+<header class="ws-page-head">
+  <div>
+    <p class="ws-eyebrow"><a href="{% url 'adminpanel:user_list' %}">Users</a></p>
+    <h1 class="ws-page-title">Create account</h1>
+  </div>
+</header>
+<section class="ws-card" style="max-width:720px" aria-label="New account">
+  <form method="post" novalidate>
+    {% csrf_token %}
+    <div class="ws-card__body ws-form">
+      {% include "partials/form_errors.html" %}
+      <div class="ws-row">
+        {% include "partials/field.html" with field=form.full_name %}
+        {% include "partials/field.html" with field=form.role %}
+      </div>
+      <div class="ws-row">
+        {% include "partials/field.html" with field=form.email %}
+        {% include "partials/field.html" with field=form.phone %}
+      </div>
+      <div class="ws-row">
+        {% include "partials/field.html" with field=form.password1 %}
+        {% include "partials/field.html" with field=form.password2 %}
+      </div>
+      <p class="ws-form-note">Fields marked with an asterisk (*) are required.</p>
+    </div>
+    <footer class="ws-card__footer">
+      <a class="ws-btn ws-btn--secondary" href="{% url 'adminpanel:user_list' %}">Cancel</a>
+      <button class="ws-btn ws-btn--primary" type="submit" data-pending-label="Creating account…">Create account</button>
+    </footer>
+  </form>
+</section>
+{% endblock %}

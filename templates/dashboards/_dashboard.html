@@ -1,0 +1,42 @@
+{% extends "layouts/app.html" %}
+{% block content %}
+<header class="ws-page-head">
+  <div style="min-width:0">
+    <p class="ws-eyebrow">{% block eyebrow %}{% endblock %}</p>
+    <h1 class="ws-page-title">{% block greeting %}Welcome, {{ user.get_short_name }}{% endblock %}</h1>
+    <p class="ws-page-lede">{{ intro }}</p>
+  </div>
+</header>
+<div class="ws-split">
+  <section class="ws-card" aria-labelledby="tools-title">
+    <header class="ws-card__header">
+      <h2 class="ws-card__title" id="tools-title">{% block tools_title %}Your tools{% endblock %}</h2>
+      <span class="ws-badge ws-badge--neutral">Opening in the next phases</span>
+    </header>
+    <div class="ws-card__body">
+      <ul class="ws-modules">
+        {% for name, description, feature_id in modules %}
+        <li class="ws-module">
+          <span class="ws-module__name">{{ name }}</span>
+          <span class="ws-module__text">{{ description }}</span>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </section>
+  <aside class="ws-stack">
+    <section class="ws-card" aria-labelledby="account-title">
+      <header class="ws-card__header"><h2 class="ws-card__title" id="account-title">Your account</h2><span class="ws-badge ws-badge--{{ user.role|lower }}">{{ user.get_role_display }}</span></header>
+      <div class="ws-card__body">
+        <dl class="ws-dl" style="grid-template-columns: minmax(0,1fr)">
+          <dt>Email address</dt><dd>{{ user.email }}</dd>
+          <dt>Contact number</dt><dd>{{ user.phone|default:"Not added yet" }}</dd>
+          <dt>Member since</dt><dd>{{ user.created_at|date:"j F Y" }}</dd>
+        </dl>
+      </div>
+      <footer class="ws-card__footer"><a class="ws-btn ws-btn--secondary ws-btn--sm" href="{% url 'accounts:profile_edit' %}">Edit profile</a></footer>
+    </section>
+    {% block aside_extra %}{% endblock %}
+  </aside>
+</div>
+{% endblock %}

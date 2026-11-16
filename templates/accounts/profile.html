@@ -1,0 +1,36 @@
+{% extends "layouts/app.html" %}
+{% block title %}Your profile{% endblock %}
+{% block content %}
+<header class="ws-page-head">
+  <div style="display:flex;align-items:center;gap:var(--space-4);min-width:0">
+    <span class="ws-avatar ws-avatar--lg" aria-hidden="true">{{ profile_user.initials }}</span>
+    <div style="min-width:0">
+      <p class="ws-eyebrow">Your profile</p>
+      <h1 class="ws-page-title">{{ profile_user.full_name }}</h1>
+    </div>
+  </div>
+  <a class="ws-btn ws-btn--primary" href="{% url 'accounts:profile_edit' %}">Edit profile</a>
+</header>
+<div class="ws-split">
+  <section class="ws-card" aria-labelledby="details-title">
+    <header class="ws-card__header"><h2 class="ws-card__title" id="details-title">Account details</h2><span class="ws-badge ws-badge--{{ profile_user.role|lower }}">{{ profile_user.get_role_display }}</span></header>
+    <div class="ws-card__body">
+      <dl class="ws-dl">
+        <dt>Full name</dt><dd>{{ profile_user.full_name }}</dd>
+        <dt>Email address</dt><dd>{{ profile_user.email }}</dd>
+        <dt>Contact number</dt><dd>{{ profile_user.phone|default:"Not added yet" }}</dd>
+        <dt>Role</dt><dd>{{ profile_user.get_role_display }}</dd>
+        <dt>Member since</dt><dd>{{ profile_user.created_at|date:"j F Y" }}</dd>
+      </dl>
+    </div>
+    <footer class="ws-card__footer"><a class="ws-btn ws-btn--secondary ws-btn--sm" href="{% url 'accounts:profile_edit' %}">Edit profile</a></footer>
+  </section>
+  <section class="ws-card" aria-labelledby="security-title">
+    <header class="ws-card__header"><h2 class="ws-card__title" id="security-title">Password</h2></header>
+    <div class="ws-card__body ws-stack" style="gap:var(--space-4)">
+      <p class="ws-muted">Your password is stored as a secure hash — nobody, including administrators, can read it.</p>
+      <a class="ws-btn ws-btn--secondary" href="{% url 'accounts:password_change' %}">Change password</a>
+    </div>
+  </section>
+</div>
+{% endblock %}

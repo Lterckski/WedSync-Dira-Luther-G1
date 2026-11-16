@@ -1,0 +1,59 @@
+{% extends "layouts/app.html" %}
+{% block title %}Admin overview{% endblock %}
+{% block content %}
+<header class="ws-page-head">
+  <div>
+    <p class="ws-eyebrow">Admin dashboard</p>
+    <h1 class="ws-page-title">Welcome, {{ user.get_short_name }}</h1>
+    <p class="ws-page-lede">Manage every WedSync account: create users, change roles and deactivate access.</p>
+  </div>
+  <a class="ws-btn ws-btn--primary" href="{% url 'adminpanel:user_create' %}">Create account</a>
+</header>
+<div class="ws-stack" style="gap:var(--space-6)">
+  <section aria-labelledby="accounts-title">
+    <h2 class="ws-sr-only" id="accounts-title">Accounts by role</h2>
+    <div class="ws-stats">
+      <a class="ws-stat ws-stat--featured" href="{% url 'adminpanel:user_list' %}">
+        <span class="ws-stat__label">All accounts</span>
+        <span class="ws-stat__value">{{ counts.total }}</span>
+        <span class="ws-stat__meta">{{ counts.active }} active, {{ counts.inactive }} deactivated</span>
+      </a>
+      <a class="ws-stat" href="{% url 'adminpanel:user_list' %}?role=COUPLE">
+        <span class="ws-stat__label">Couples</span><span class="ws-stat__value">{{ counts.couple }}</span>
+      </a>
+      <a class="ws-stat" href="{% url 'adminpanel:user_list' %}?role=COORDINATOR">
+        <span class="ws-stat__label">Coordinators</span><span class="ws-stat__value">{{ counts.coordinator }}</span>
+      </a>
+      <a class="ws-stat" href="{% url 'adminpanel:user_list' %}?role=VENDOR">
+        <span class="ws-stat__label">Vendors</span><span class="ws-stat__value">{{ counts.vendor }}</span>
+      </a>
+      <a class="ws-stat" href="{% url 'adminpanel:user_list' %}?role=ADMIN">
+        <span class="ws-stat__label">Administrators</span><span class="ws-stat__value">{{ counts.admin }}</span>
+      </a>
+    </div>
+  </section>
+  <section class="ws-card" aria-labelledby="recent-title">
+    <header class="ws-card__header">
+      <h2 class="ws-card__title" id="recent-title">Newest accounts</h2>
+      <a class="ws-btn ws-btn--ghost ws-btn--sm" href="{% url 'adminpanel:user_list' %}">See all users</a>
+    </header>
+    <div class="ws-card__body" style="padding-left:0;padding-right:0;padding-bottom:var(--space-2)">
+      <div class="ws-table-wrap">
+        <table class="ws-table">
+          <thead><tr><th scope="col">Person</th><th scope="col">Role</th><th scope="col">Status</th><th scope="col">Joined</th></tr></thead>
+          <tbody>
+            {% for person in recent %}
+            <tr>
+              <td>{% include "adminpanel/_person.html" %}</td>
+              <td><span class="ws-badge ws-badge--{{ person.role|lower }}">{{ person.get_role_display }}</span></td>
+              <td>{% if person.is_active %}<span class="ws-badge ws-badge--success">Active</span>{% else %}<span class="ws-badge ws-badge--neutral">Deactivated</span>{% endif %}</td>
+              <td class="ws-num">{{ person.created_at|date:"j M Y" }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</div>
+{% endblock %}
