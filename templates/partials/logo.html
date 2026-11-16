@@ -1,0 +1,10 @@
+{% load static %}{# Logo lockup. on_dark: the surface behind it is always dark (navbar, auth panel). #}
+<a class="ws-logo{% if extra_class %} {{ extra_class }}{% endif %}" href="{{ href|default:'/' }}" aria-label="WedSync home">
+  {% if on_dark %}
+  <img class="ws-logo__mark" src="{% static 'img/wedsync-mark-dark.png' %}" alt="" width="40" height="40">
+  {% else %}
+  <img class="ws-logo__mark ws-on-light" src="{% static 'img/wedsync-mark.png' %}" alt="" width="40" height="40">
+  <img class="ws-logo__mark ws-on-dark" src="{% static 'img/wedsync-mark-dark.png' %}" alt="" width="40" height="40">
+  {% endif %}
+  <span class="ws-logo__word">Wed<span>Sync</span></span>
+</a>

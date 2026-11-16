@@ -1,0 +1,10 @@
+{% if messages %}
+<div class="ws-alerts">
+  {% for message in messages %}
+  <div class="ws-alert ws-alert--{{ message.tags|default:'info' }}" role="{% if message.level >= 40 %}alert{% else %}status{% endif %}">
+    {% if message.tags == "success" %}{% include "icons/success.svg" %}{% elif message.tags == "error" %}{% include "icons/error.svg" %}{% elif message.tags == "warning" %}{% include "icons/warning.svg" %}{% else %}{% include "icons/info.svg" %}{% endif %}
+    <div>{{ message }}</div>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Wedding planning and day-of coordination{% endblock %}
+{% block body %}
+<div class="ws-landing">
+  <header class="ws-container ws-landing__bar">
+    {% include "partials/logo.html" %}
+    <div class="ws-landing__actions">{% include "partials/theme_toggle.html" with on_light=True %}</div>
+  </header>
+  <main class="ws-container ws-hero">
+    <div>
+      <h1 class="ws-hero__title">Plan it once. <span>Run it live.</span></h1>
+      <p class="ws-hero__lede">One workspace where couples, coordinators and vendors share the budget, the guest list and the day-of timeline.</p>
+    </div>
+    <div class="ws-hero__art" aria-hidden="true"><img src="{% static 'img/wedsync-mark-dark.png' %}" alt=""></div>
+  </main>
+</div>
+{% endblock %}
