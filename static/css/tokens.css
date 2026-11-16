@@ -1,17 +1,17 @@
 /* WedSync — generated from tokens.json */
 :root, [data-theme="light"] {
-  --surface-0: #f3f4f6;
-  --surface-100: #ffffff;
-  --surface-200: #eceef1;
-  --silver: #dfe2e7;
+  --surface-0: #efeeea;
+  --surface-100: #faf9f6;
+  --surface-200: #e7e5e0;
+  --silver: #dcdad4;
   --surface-nav: #141217;
   --ink: #141217;
-  --ink-muted: #545761;
-  --ink-subtle: #686b75;
+  --ink-muted: #54524f;
+  --ink-subtle: #67645f;
   --ink-on-dark: #ffffff;
   --ink-on-dark-muted: #d6d3dc;
-  --border: #e1e3e8;
-  --border-control: #868a94;
+  --border: #dddbd5;
+  --border-control: #847f78;
   --sheen: #ffffff;
   --brand: #a8122a;
   --brand-hover: #870e21;
