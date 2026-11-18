@@ -1,0 +1,5 @@
+{# The event code with a copy button. The button only appears when JavaScript can copy. #}
+<div class="ws-code">
+  <span class="ws-code__value" id="event-code-{{ wedding.pk }}">{{ wedding.event_code }}</span>
+  <button class="ws-btn ws-btn--secondary ws-btn--sm" type="button" data-copy="#event-code-{{ wedding.pk }}" data-copied-label="Copied" aria-live="polite" hidden>Copy code</button>
+</div>

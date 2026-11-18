@@ -111,6 +111,23 @@
     start();
   });
 
+  // Copy buttons (event codes): data-copy points at the element whose text is copied.
+  // They are hidden in the HTML and only shown where the browser can copy.
+  if (navigator.clipboard && window.isSecureContext) {
+    document.querySelectorAll("[data-copy]").forEach(function (button) { button.hidden = false; });
+  }
+  document.addEventListener("click", function (event) {
+    var button = event.target.closest("[data-copy]");
+    if (!button) return;
+    var source = document.querySelector(button.getAttribute("data-copy"));
+    if (!source) return;
+    var label = button.textContent;
+    navigator.clipboard.writeText(source.textContent.trim()).then(function () {
+      button.textContent = button.getAttribute("data-copied-label") || "Copied";
+      window.setTimeout(function () { button.textContent = label; }, 2000);
+    });
+  });
+
   // Coming back with the browser's Back button restores the page as it was: undo the pending state.
   window.addEventListener("pageshow", function (event) {
     if (!event.persisted) return;

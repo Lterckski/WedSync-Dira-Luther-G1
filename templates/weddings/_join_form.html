@@ -1,0 +1,11 @@
+{# Join-by-event-code form. Include with form=<JoinWeddingForm>. #}
+<form method="post" action="{% url 'weddings:join' %}" novalidate>
+  {% csrf_token %}
+  <div class="ws-card__body ws-form">
+    {% include "partials/form_errors.html" %}
+    {% include "partials/field.html" with field=form.event_code %}
+  </div>
+  <footer class="ws-card__footer">
+    <button class="ws-btn ws-btn--primary" type="submit" data-pending-label="Joining…">Join wedding</button>
+  </footer>
+</form>

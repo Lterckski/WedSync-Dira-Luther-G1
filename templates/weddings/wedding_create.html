@@ -1,0 +1,30 @@
+{% extends "layouts/app.html" %}
+{% block title %}Create your wedding{% endblock %}
+{% block content %}
+<header class="ws-page-head">
+  <div>
+    <p class="ws-eyebrow"><a href="{% url 'dashboards:couple' %}">My wedding</a></p>
+    <h1 class="ws-page-title">Create your wedding</h1>
+    <p class="ws-page-lede">You'll get an event code to share with your partner and coordinator so they can join.</p>
+  </div>
+</header>
+<section class="ws-card ws-card--form" aria-label="Wedding details">
+  <form method="post" novalidate>
+    {% csrf_token %}
+    <div class="ws-card__body ws-form">
+      {% include "partials/form_errors.html" %}
+      {% include "partials/field.html" with field=form.title %}
+      <div class="ws-row">
+        {% include "partials/field.html" with field=form.wedding_date %}
+        {% include "partials/field.html" with field=form.base_currency %}
+      </div>
+      {% include "partials/field.html" with field=form.venue %}
+      <p class="ws-form-note">Fields marked with an asterisk (*) are required.</p>
+    </div>
+    <footer class="ws-card__footer">
+      <a class="ws-btn ws-btn--secondary" href="{% url 'dashboards:couple' %}">Cancel</a>
+      <button class="ws-btn ws-btn--primary" type="submit" data-pending-label="Creating wedding…">Create wedding</button>
+    </footer>
+  </form>
+</section>
+{% endblock %}

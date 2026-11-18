@@ -1,0 +1,96 @@
+{% extends "layouts/app.html" %}
+{% block title %}{{ wedding.title }}{% endblock %}
+{% block content %}
+<header class="ws-page-head">
+  <div class="ws-min-0">
+    <p class="ws-eyebrow"><a href="{% url 'dashboards:home' %}">{% if is_couple %}My wedding{% else %}Weddings{% endif %}</a></p>
+    <h1 class="ws-page-title">{{ wedding.title }}</h1>
+    <p class="ws-page-meta">{% include "weddings/_status_badge.html" %} {{ wedding.wedding_date|date:"l, j F Y" }}{% if wedding.venue %} · {{ wedding.venue }}{% endif %}</p>
+  </div>
+  {% if is_couple %}<a class="ws-btn ws-btn--primary" href="{% url 'weddings:edit' wedding.pk %}">Edit details</a>{% endif %}
+</header>
+<div class="ws-split">
+  <div class="ws-stack">
+    <section class="ws-card" aria-labelledby="details-title">
+      <header class="ws-card__header"><h2 class="ws-card__title" id="details-title">Wedding details</h2></header>
+      <div class="ws-card__body">
+        <dl class="ws-dl">
+          <dt>Wedding name</dt><dd>{{ wedding.title }}</dd>
+          <dt>Date</dt><dd>{{ wedding.wedding_date|date:"l, j F Y" }}</dd>
+          <dt>Venue</dt><dd>{{ wedding.venue|default:"Not set yet" }}</dd>
+          <dt>Budget currency</dt><dd>{{ wedding.get_base_currency_display }}</dd>
+          <dt>Status</dt><dd>{{ wedding.get_status_display }}</dd>
+          <dt>Created</dt><dd>{{ wedding.created_at|date:"j F Y" }}</dd>
+        </dl>
+      </div>
+    </section>
+    <section class="ws-card" aria-labelledby="members-title">
+      <header class="ws-card__header">
+        <h2 class="ws-card__title" id="members-title">Members</h2>
+        <span class="ws-badge ws-badge--neutral">{{ members|length }}</span>
+      </header>
+      <div class="ws-card__body ws-card__body--flush">
+        <div class="ws-table-wrap">
+          <table class="ws-table">
+            <thead><tr><th scope="col">Person</th><th scope="col">Role</th><th scope="col">Joined</th><th scope="col"><span class="ws-sr-only">Actions</span></th></tr></thead>
+            <tbody>
+              {% for member in members %}
+              <tr>
+                <td>
+                  <div class="ws-table__person">
+                    <span class="ws-avatar" aria-hidden="true">{{ member.user.initials }}</span>
+                    <div class="ws-min-0">
+                      <span class="ws-table__name">{{ member.user.full_name }}{% if member.user_id == user.pk %} (you){% endif %}</span>
+                      <div class="ws-table__email">{{ member.user.email }}</div>
+                    </div>
+                  </div>
+                </td>
+                <td><span class="ws-badge ws-badge--{{ member.member_role|lower }}">{{ member.get_member_role_display }}</span></td>
+                <td class="ws-num">{{ member.joined_at|date:"j M Y" }}</td>
+                <td class="ws-table__actions">
+                  {% if is_couple and member.member_role == "COORDINATOR" %}
+                    <a class="ws-btn ws-btn--secondary ws-btn--sm" href="{% url 'weddings:member_remove' wedding.pk member.pk %}">Remove<span class="ws-sr-only"> {{ member.user.full_name }}</span></a>
+                  {% elif member.user_id == user.pk and member.member_role == "COORDINATOR" %}
+                    <a class="ws-btn ws-btn--secondary ws-btn--sm" href="{% url 'weddings:leave' wedding.pk %}">Leave wedding</a>
+                  {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </div>
+  <aside class="ws-stack">
+    {% if is_couple %}
+    <section class="ws-card" aria-labelledby="code-title">
+      <header class="ws-card__header"><h2 class="ws-card__title" id="code-title">Event code</h2></header>
+      <div class="ws-card__body ws-stack ws-stack--tight">
+        {% include "weddings/_event_code.html" %}
+        <p class="ws-muted">Share it with your partner and coordinator. They type it on their dashboard to join.</p>
+      </div>
+      <footer class="ws-card__footer">
+        <form method="post" action="{% url 'weddings:event_code_regenerate' wedding.pk %}">
+          {% csrf_token %}
+          <button class="ws-btn ws-btn--secondary ws-btn--sm" type="submit" data-pending-label="Making a new code…">Make a new code</button>
+        </form>
+      </footer>
+    </section>
+    <section class="ws-card" aria-labelledby="delete-title">
+      <header class="ws-card__header"><h2 class="ws-card__title" id="delete-title">Delete wedding</h2></header>
+      <div class="ws-card__body ws-stack ws-stack--tight">
+        <p class="ws-muted">Removes the wedding for every member. Weddings with budget categories can't be deleted; set the status to Cancelled instead.</p>
+        <a class="ws-btn ws-btn--danger" href="{% url 'weddings:delete' wedding.pk %}">Delete wedding</a>
+      </div>
+    </section>
+    {% else %}
+    <section class="ws-stat ws-stat--featured" aria-labelledby="role-note">
+      <span class="ws-stat__label" id="role-note">Your role</span>
+      <span class="ws-module__name">{{ membership.get_member_role_display }}</span>
+      <span class="ws-stat__meta">The couple manages the wedding details and its event code.</span>
+    </section>
+    {% endif %}
+  </aside>
+</div>
+{% endblock %}
