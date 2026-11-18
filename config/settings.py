@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     "accounts",
     "dashboards",
     "adminpanel",
+    "weddings",
 ]
 
 MIDDLEWARE = [
@@ -115,6 +116,9 @@ if DATABASES["default"]["ENGINE"] != "django.db.backends.postgresql":
     raise ImproperlyConfigured("DATABASE_URL must point to a PostgreSQL database.")
 
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
+
+# Tests run in a separate test_<name> database; see core/test_runner.py.
+TEST_RUNNER = "core.test_runner.PostgresTestRunner"
 
 # ---------------------------------------------------------------------------
 # Authentication
