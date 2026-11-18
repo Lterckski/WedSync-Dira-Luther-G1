@@ -1,0 +1,25 @@
+{% extends "layouts/app.html" %}
+{% block title %}{% if category %}Edit {{ category.name }}{% else %}Add a category{% endif %}{% endblock %}
+{% block content %}
+<header class="ws-page-head">
+  <div>
+    <p class="ws-eyebrow"><a href="{% url 'budget:overview' wedding.pk %}">Budget · {{ wedding.title }}</a></p>
+    <h1 class="ws-page-title">{% if category %}Edit {{ category.name }}{% else %}Add a category{% endif %}</h1>
+  </div>
+</header>
+<section class="ws-card ws-card--narrow" aria-label="Category details">
+  <form method="post" novalidate>
+    {% csrf_token %}
+    <div class="ws-card__body ws-form">
+      {% include "partials/form_errors.html" %}
+      {% include "partials/field.html" with field=form.name %}
+      {% include "partials/field.html" with field=form.allocated_amount %}
+      <p class="ws-form-note">Fields marked with an asterisk (*) are required.</p>
+    </div>
+    <footer class="ws-card__footer">
+      <a class="ws-btn ws-btn--secondary" href="{% url 'budget:overview' wedding.pk %}">Cancel</a>
+      <button class="ws-btn ws-btn--primary" type="submit" data-pending-label="Saving…">{% if category %}Save changes{% else %}Add category{% endif %}</button>
+    </footer>
+  </form>
+</section>
+{% endblock %}

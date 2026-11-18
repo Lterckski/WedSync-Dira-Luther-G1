@@ -1,0 +1,70 @@
+{% extends "layouts/app.html" %}
+{% load ws_money %}
+{% block title %}Expenses · {{ wedding.title }}{% endblock %}
+{% block content %}
+<header class="ws-page-head">
+  <div class="ws-min-0">
+    <p class="ws-eyebrow"><a href="{% url 'budget:overview' wedding.pk %}">Budget · {{ wedding.title }}</a></p>
+    <h1 class="ws-page-title">Expenses</h1>
+  </div>
+  <a class="ws-btn ws-btn--primary" href="{% url 'budget:expense_create' wedding.pk %}{% if selected and selected.is_active %}?category={{ selected.pk }}{% endif %}">Add expense</a>
+</header>
+<section class="ws-card" aria-label="Expenses">
+  <form class="ws-toolbar" method="get" data-no-pending>
+    <div class="ws-field ws-field--narrow">
+      <label class="ws-label" for="category">Category</label>
+      <select class="ws-input" id="category" name="category">
+        <option value="">All categories</option>
+        {% for category in categories %}<option value="{{ category.pk }}"{% if selected and category.pk == selected.pk %} selected{% endif %}>{{ category.name }}{% if not category.is_active %} (inactive){% endif %}</option>{% endfor %}
+      </select>
+    </div>
+    <div class="ws-form-actions">
+      <button class="ws-btn ws-btn--secondary" type="submit">Filter</button>
+      {% if selected %}<a class="ws-btn ws-btn--ghost" href="{% url 'budget:expense_list' wedding.pk %}">Show all</a>{% endif %}
+    </div>
+  </form>
+  {% if page.object_list %}
+  <div class="ws-table-wrap">
+    <table class="ws-table">
+      <thead><tr><th scope="col">Date</th><th scope="col">Description</th><th scope="col">Category</th><th scope="col" class="ws-money">Amount</th><th scope="col">Recorded by</th><th scope="col"><span class="ws-sr-only">Actions</span></th></tr></thead>
+      <tbody>
+        {% for expense in page.object_list %}
+        <tr>
+          <td class="ws-num">{{ expense.expense_date|date:"j M Y" }}</td>
+          <td>{{ expense.description }}</td>
+          <td>{{ expense.category.name }}{% if not expense.category.is_active %} <span class="ws-badge ws-badge--neutral">Inactive</span>{% endif %}</td>
+          <td class="ws-num ws-money">{{ expense.amount|money:wedding.base_currency }}</td>
+          <td>{{ expense.recorded_by.full_name }}{% if expense.recorded_by_id == user.pk %} (you){% endif %}</td>
+          <td class="ws-table__actions">
+            {% if is_couple or expense.recorded_by_id == user.pk %}
+              <a class="ws-btn ws-btn--secondary ws-btn--sm" href="{% url 'budget:expense_edit' wedding.pk expense.pk %}">Edit<span class="ws-sr-only"> {{ expense.description }}</span></a>
+              <a class="ws-btn ws-btn--danger ws-btn--sm" href="{% url 'budget:expense_delete' wedding.pk expense.pk %}">Delete<span class="ws-sr-only"> {{ expense.description }}</span></a>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <nav class="ws-pagination" aria-label="Pages">
+    <span>Showing {{ page.start_index }}–{{ page.end_index }} of {{ page.paginator.count }}</span>
+    <span class="ws-pagination__links">
+      {% if page.has_previous %}<a class="ws-btn ws-btn--secondary ws-btn--sm" href="?{% if querystring %}{{ querystring }}&amp;{% endif %}page={{ page.previous_page_number }}">Previous page</a>{% endif %}
+      {% if page.has_next %}<a class="ws-btn ws-btn--secondary ws-btn--sm" href="?{% if querystring %}{{ querystring }}&amp;{% endif %}page={{ page.next_page_number }}">Next page</a>{% endif %}
+    </span>
+  </nav>
+  {% else %}
+  <div class="ws-empty">
+    {% if selected %}
+      <p class="ws-empty__title">No expenses in {{ selected.name }}</p>
+      <p class="ws-empty__text">Nothing has been recorded against this category yet.</p>
+      <a class="ws-btn ws-btn--secondary" href="{% url 'budget:expense_list' wedding.pk %}">Show all expenses</a>
+    {% else %}
+      <p class="ws-empty__title">No expenses yet</p>
+      <p class="ws-empty__text">Record each payment or deposit against a budget category to see how much is left.</p>
+      <a class="ws-btn ws-btn--primary" href="{% url 'budget:expense_create' wedding.pk %}">Add an expense</a>
+    {% endif %}
+  </div>
+  {% endif %}
+</section>
+{% endblock %}

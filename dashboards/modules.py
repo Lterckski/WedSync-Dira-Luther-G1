@@ -40,7 +40,7 @@ ROLE_INTROS = {
 
 # Features each role can already use (the rest are marked "Coming soon").
 AVAILABLE_FEATURES = {
-    Role.COUPLE: {"F-02"},
-    Role.COORDINATOR: {"F-02"},
+    Role.COUPLE: {"F-02", "F-03"},
+    Role.COORDINATOR: {"F-02", "F-03"},
     Role.VENDOR: set(),
 }

@@ -7,7 +7,10 @@
     <h1 class="ws-page-title">{{ wedding.title }}</h1>
     <p class="ws-page-meta">{% include "weddings/_status_badge.html" %} {{ wedding.wedding_date|date:"l, j F Y" }}{% if wedding.venue %} · {{ wedding.venue }}{% endif %}</p>
   </div>
-  {% if is_couple %}<a class="ws-btn ws-btn--primary" href="{% url 'weddings:edit' wedding.pk %}">Edit details</a>{% endif %}
+  <div class="ws-form-actions">
+    {% if membership.member_role == "COUPLE" or membership.member_role == "COORDINATOR" %}<a class="ws-btn ws-btn--{% if is_couple %}secondary{% else %}primary{% endif %}" href="{% url 'budget:overview' wedding.pk %}">Open budget</a>{% endif %}
+    {% if is_couple %}<a class="ws-btn ws-btn--primary" href="{% url 'weddings:edit' wedding.pk %}">Edit details</a>{% endif %}
+  </div>
 </header>
 <div class="ws-split">
   <div class="ws-stack">
