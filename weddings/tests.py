@@ -125,7 +125,7 @@ class WeddingConstraintTests(TestCase):
 
     def test_database_defaults(self):
         row = raw(
-            "INSERT INTO weddings (title, event_code, wedding_date) VALUES ('Raw', 'RAWCODE2', '2027-01-01') "
+            "INSERT INTO weddings (title, event_code, wedding_date) VALUES ('Raw', 'RAWCDE23', '2027-01-01') "
             "RETURNING base_currency, status, created_at"
         )[0]
         self.assertEqual(row[:2], ("PHP", "PLANNING"))
