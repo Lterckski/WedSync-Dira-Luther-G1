@@ -14,3 +14,17 @@ class TimestampField(models.DateTimeField):
         if connection.vendor == "postgresql":
             return "timestamp"
         return super().db_type(connection)
+
+
+class FixedCharField(models.CharField):
+    """
+    A CharField stored as PostgreSQL CHAR(n) instead of VARCHAR(n).
+
+    The SDD uses CHAR(3) for ISO 4217 currency codes (weddings.base_currency),
+    where every value has exactly max_length characters.
+    """
+
+    def db_type(self, connection):
+        if connection.vendor == "postgresql":
+            return f"char({self.max_length})"
+        return super().db_type(connection)
