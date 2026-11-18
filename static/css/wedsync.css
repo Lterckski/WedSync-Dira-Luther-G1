@@ -309,6 +309,31 @@ textarea.ws-input { min-height: 96px; resize: vertical; }
 .ws-code { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-3); padding: var(--space-3) var(--space-4); border: 1px dashed var(--border-control); border-radius: var(--radius-md); background: var(--surface-0); }
 .ws-code__value { font-family: ui-monospace, "SFMono-Regular", Consolas, monospace; font-size: 24px; line-height: 32px; font-weight: 600; letter-spacing: 0.18em; color: var(--ink); }
 
+/* ---------- Budget ---------- */
+.ws-stat__value--money { font-size: 30px; line-height: 36px; overflow-wrap: anywhere; }
+.ws-stat--over .ws-stat__value { color: var(--danger); }
+.ws-table .ws-money { text-align: right; }
+.ws-money--over { color: var(--danger); font-weight: 600; }
+.ws-card__intro { padding: 0 var(--space-5) var(--space-3); }
+.ws-inline-form { display: inline; margin: 0; }
+.ws-table__actions .ws-btn + .ws-btn, .ws-table__actions .ws-btn + .ws-inline-form, .ws-table__actions .ws-inline-form + .ws-btn { margin-left: var(--space-1); }
+
+/* Progress bar: share of a category's allocation that is spent. */
+.ws-usage { display: flex; align-items: center; gap: var(--space-2); min-width: 150px; }
+.ws-usage__text { min-width: 44px; text-align: right; font-size: 13px; color: var(--ink-muted); }
+.ws-progress {
+  flex: 1; height: 8px; min-width: 80px;
+  appearance: none; -webkit-appearance: none; border: 0; border-radius: var(--radius-pill);
+  background: var(--surface-200); color: var(--success); overflow: hidden;
+}
+.ws-progress::-webkit-progress-bar { background: var(--surface-200); border-radius: var(--radius-pill); }
+.ws-progress::-webkit-progress-value { background: var(--success); border-radius: var(--radius-pill); }
+.ws-progress::-moz-progress-bar { background: var(--success); border-radius: var(--radius-pill); }
+.ws-progress--over { color: var(--danger); }
+.ws-progress--over::-webkit-progress-value { background: var(--danger); }
+.ws-progress--over::-moz-progress-bar { background: var(--danger); }
+.ws-progress--over + .ws-usage__text { color: var(--danger); font-weight: 600; }
+
 /* ---------- Auth layout ---------- */
 .ws-auth { display: grid; grid-template-columns: 5fr 7fr; min-height: 100vh; min-height: 100dvh; }
 .ws-auth__panel {

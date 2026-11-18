@@ -8,6 +8,7 @@ urlpatterns = [
     path("dashboard/", include("dashboards.urls")),
     path("manage/", include("adminpanel.urls")),
     path("weddings/", include("weddings.urls")),
+    path("weddings/<int:wedding_id>/budget/", include("budget.urls")),
 ]
 
 handler403 = "core.views.permission_denied"

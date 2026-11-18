@@ -1,0 +1,16 @@
+{% load ws_money %}{# Budget totals for one wedding annotated by budget.queries.with_budget_totals. #}
+<div class="ws-stats">
+  <div class="ws-stat ws-stat--featured">
+    <span class="ws-stat__label">Total allocated</span>
+    <span class="ws-stat__value ws-stat__value--money">{{ wedding.budget_allocated|money:wedding.base_currency }}</span>
+  </div>
+  <div class="ws-stat">
+    <span class="ws-stat__label">Total spent</span>
+    <span class="ws-stat__value ws-stat__value--money">{{ wedding.budget_spent|money:wedding.base_currency }}</span>
+  </div>
+  <div class="ws-stat{% if wedding.budget_remaining < 0 %} ws-stat--over{% endif %}">
+    <span class="ws-stat__label">Remaining</span>
+    <span class="ws-stat__value ws-stat__value--money">{{ wedding.budget_remaining|money:wedding.base_currency }}</span>
+    <span class="ws-stat__meta">{% if wedding.budget_over_count %}{{ wedding.budget_over_count }} categor{{ wedding.budget_over_count|pluralize:"y,ies" }} over budget{% else %}No categories over budget{% endif %}</span>
+  </div>
+</div>

@@ -1,0 +1,39 @@
+{% extends "layouts/app.html" %}
+{% block title %}{% if expense %}Edit expense{% else %}Add an expense{% endif %}{% endblock %}
+{% block content %}
+<header class="ws-page-head">
+  <div>
+    <p class="ws-eyebrow"><a href="{% url 'budget:expense_list' wedding.pk %}">Expenses · {{ wedding.title }}</a></p>
+    <h1 class="ws-page-title">{% if expense %}Edit expense{% else %}Add an expense{% endif %}</h1>
+  </div>
+</header>
+<section class="ws-card ws-card--form" aria-label="Expense details">
+  {% if has_categories %}
+  <form method="post" novalidate>
+    {% csrf_token %}
+    <div class="ws-card__body ws-form">
+      {% include "partials/form_errors.html" %}
+      {% include "partials/field.html" with field=form.description %}
+      <div class="ws-row">
+        {% include "partials/field.html" with field=form.category %}
+        {% include "partials/field.html" with field=form.amount %}
+      </div>
+      <div class="ws-row">
+        {% include "partials/field.html" with field=form.expense_date %}
+      </div>
+      <p class="ws-form-note">Fields marked with an asterisk (*) are required.{% if expense %} Recorded by {{ expense.recorded_by.full_name }}.{% endif %}</p>
+    </div>
+    <footer class="ws-card__footer">
+      <a class="ws-btn ws-btn--secondary" href="{% url 'budget:expense_list' wedding.pk %}">Cancel</a>
+      <button class="ws-btn ws-btn--primary" type="submit" data-pending-label="Saving…">{% if expense %}Save changes{% else %}Add expense{% endif %}</button>
+    </footer>
+  </form>
+  {% else %}
+  <div class="ws-empty">
+    <p class="ws-empty__title">Add a category first</p>
+    <p class="ws-empty__text">Every expense belongs to an active budget category, like Venue or Catering.</p>
+    <a class="ws-btn ws-btn--primary" href="{% url 'budget:category_create' wedding.pk %}">Add a category</a>
+  </div>
+  {% endif %}
+</section>
+{% endblock %}

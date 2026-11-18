@@ -24,6 +24,18 @@
     <a class="ws-btn ws-btn--primary ws-btn--sm" href="{% url 'weddings:detail' wedding.pk %}">Open wedding</a>
   </footer>
 </section>
+<section class="ws-card ws-section" aria-labelledby="budget-title">
+  <header class="ws-card__header">
+    <h2 class="ws-card__title" id="budget-title">Budget</h2>
+    {% if wedding.budget_over_count %}<span class="ws-badge ws-badge--danger">{{ wedding.budget_over_count }} over budget</span>{% endif %}
+  </header>
+  <div class="ws-card__body">{% include "budget/_summary.html" %}</div>
+  <footer class="ws-card__footer">
+    <a class="ws-btn ws-btn--secondary ws-btn--sm" href="{% url 'budget:category_create' wedding.pk %}">Add category</a>
+    <a class="ws-btn ws-btn--secondary ws-btn--sm" href="{% url 'budget:expense_create' wedding.pk %}">Add expense</a>
+    <a class="ws-btn ws-btn--primary ws-btn--sm" href="{% url 'budget:overview' wedding.pk %}">Open budget</a>
+  </footer>
+</section>
 {% else %}
 <div class="ws-row ws-section">
   <section class="ws-card" aria-labelledby="create-title">

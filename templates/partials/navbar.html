@@ -9,6 +9,7 @@
       {% else %}
         {% if user.role == "COUPLE" %}{% url 'dashboards:couple' as dash_url %}{% elif user.role == "COORDINATOR" %}{% url 'dashboards:coordinator' as dash_url %}{% else %}{% url 'dashboards:vendor' as dash_url %}{% endif %}
         <a class="ws-nav__link{% if ns == 'dashboards' or ns == 'weddings' %} is-active{% endif %}" href="{{ dash_url }}"{% if ns == 'dashboards' or ns == 'weddings' %} aria-current="page"{% endif %}>{% if user.role == "COUPLE" %}My wedding{% elif user.role == "COORDINATOR" %}Weddings{% else %}Bookings{% endif %}</a>
+        {% if budget_nav_wedding %}<a class="ws-nav__link{% if ns == 'budget' %} is-active{% endif %}" href="{% url 'budget:overview' budget_nav_wedding.pk %}"{% if ns == 'budget' %} aria-current="page"{% endif %}>Budget</a>{% endif %}
       {% endif %}
       <a class="ws-nav__link{% if ns == 'accounts' %} is-active{% endif %}" href="{% url 'accounts:profile' %}"{% if ns == 'accounts' %} aria-current="page"{% endif %}>Profile</a>
     </div>
