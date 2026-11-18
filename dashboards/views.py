@@ -4,6 +4,7 @@ from django.shortcuts import redirect, render
 
 from accounts.decorators import dashboard_url_for, role_required
 from accounts.models import Role
+from budget.queries import with_budget_totals
 from weddings.forms import JoinWeddingForm
 from weddings.models import MemberRole, Wedding, WeddingMember, couple_membership
 
@@ -28,17 +29,20 @@ def _render_dashboard(request, role, template, **context):
 @role_required(Role.COUPLE)
 def couple(request):
     membership = couple_membership(request.user)
+    wedding = None
+    if membership:
+        wedding = with_budget_totals(Wedding.objects.filter(pk=membership.wedding_id)).get()
     return _render_dashboard(
         request, Role.COUPLE, "dashboards/couple.html",
-        wedding=membership.wedding if membership else None,
+        wedding=wedding,
         join_form=None if membership else JoinWeddingForm(user=request.user),
     )
 
 
 @role_required(Role.COORDINATOR)
 def coordinator(request):
-    # Each wedding with its couple members in two queries, however many weddings there are.
-    weddings = Wedding.objects.for_user(request.user).prefetch_related(
+    # Each wedding with its budget totals and couple members in two queries, however many weddings there are.
+    weddings = with_budget_totals(Wedding.objects.for_user(request.user)).prefetch_related(
         Prefetch(
             "members",
             queryset=WeddingMember.objects.filter(member_role=MemberRole.COUPLE).select_related("user"),

@@ -1,4 +1,5 @@
 {% extends "dashboards/_dashboard.html" %}
+{% load ws_money %}
 {% block title %}Weddings{% endblock %}
 {% block eyebrow %}Coordinator dashboard{% endblock %}
 {% block tools_title %}Running your weddings{% endblock %}
@@ -13,7 +14,7 @@
     <div class="ws-card__body ws-card__body--flush">
       <div class="ws-table-wrap">
         <table class="ws-table">
-          <thead><tr><th scope="col">Wedding</th><th scope="col">Date</th><th scope="col">Couple</th><th scope="col">Status</th></tr></thead>
+          <thead><tr><th scope="col">Wedding</th><th scope="col">Date</th><th scope="col">Couple</th><th scope="col">Status</th><th scope="col" class="ws-money">Allocated</th><th scope="col" class="ws-money">Spent</th><th scope="col" class="ws-money">Remaining</th><th scope="col">Over budget</th></tr></thead>
           <tbody>
             {% for wedding in weddings %}
             <tr>
@@ -21,6 +22,10 @@
               <td class="ws-num">{{ wedding.wedding_date|date:"j M Y" }}</td>
               <td>{% for member in wedding.couple_members %}{{ member.user.full_name }}{% if not forloop.last %} &amp; {% endif %}{% empty %}<span class="ws-muted">—</span>{% endfor %}</td>
               <td>{% include "weddings/_status_badge.html" %}</td>
+              <td class="ws-num ws-money">{{ wedding.budget_allocated|money:wedding.base_currency }}</td>
+              <td class="ws-num ws-money">{{ wedding.budget_spent|money:wedding.base_currency }}</td>
+              <td class="ws-num ws-money{% if wedding.budget_remaining < 0 %} ws-money--over{% endif %}">{{ wedding.budget_remaining|money:wedding.base_currency }}</td>
+              <td>{% if wedding.budget_over_count %}<a class="ws-badge ws-badge--danger" href="{% url 'budget:overview' wedding.pk %}">{{ wedding.budget_over_count }} categor{{ wedding.budget_over_count|pluralize:"y,ies" }}</a>{% else %}<a class="ws-badge ws-badge--success" href="{% url 'budget:overview' wedding.pk %}">None</a>{% endif %}</td>
             </tr>
             {% endfor %}
           </tbody>
