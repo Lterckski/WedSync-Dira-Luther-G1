@@ -7,6 +7,7 @@ urlpatterns = [
     path("accounts/", include("accounts.urls")),
     path("dashboard/", include("dashboards.urls")),
     path("manage/", include("adminpanel.urls")),
+    path("weddings/", include("weddings.urls")),
 ]
 
 handler403 = "core.views.permission_denied"

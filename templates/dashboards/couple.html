@@ -2,10 +2,55 @@
 {% block title %}My wedding{% endblock %}
 {% block eyebrow %}Couple dashboard{% endblock %}
 {% block tools_title %}Planning your wedding{% endblock %}
+{% block lead %}
+{% if wedding %}
+<section class="ws-card ws-section" aria-labelledby="wedding-title">
+  <header class="ws-card__header">
+    <h2 class="ws-card__title" id="wedding-title">{{ wedding.title }}</h2>
+    {% include "weddings/_status_badge.html" %}
+  </header>
+  <div class="ws-card__body ws-split">
+    <dl class="ws-dl">
+      <dt>Date</dt><dd>{{ wedding.wedding_date|date:"l, j F Y" }}</dd>
+      <dt>Venue</dt><dd>{{ wedding.venue|default:"Not set yet" }}</dd>
+      <dt>Budget currency</dt><dd>{{ wedding.base_currency }}</dd>
+    </dl>
+    <div class="ws-stack ws-stack--tight">
+      <span class="ws-stat__label">Event code</span>
+      {% include "weddings/_event_code.html" %}
+    </div>
+  </div>
+  <footer class="ws-card__footer">
+    <a class="ws-btn ws-btn--primary ws-btn--sm" href="{% url 'weddings:detail' wedding.pk %}">Open wedding</a>
+  </footer>
+</section>
+{% else %}
+<div class="ws-row ws-section">
+  <section class="ws-card" aria-labelledby="create-title">
+    <header class="ws-card__header"><h2 class="ws-card__title" id="create-title">Create your wedding</h2></header>
+    <div class="ws-card__body ws-stack ws-stack--tight">
+      <p class="ws-muted">Set the name, date, venue and budget currency. You'll get an event code to share with your partner and coordinator.</p>
+    </div>
+    <footer class="ws-card__footer">
+      <a class="ws-btn ws-btn--primary" href="{% url 'weddings:create' %}">Create your wedding</a>
+    </footer>
+  </section>
+  <section class="ws-card" aria-labelledby="join-title">
+    <header class="ws-card__header"><h2 class="ws-card__title" id="join-title">Join with an event code</h2></header>
+    {% include "weddings/_join_form.html" with form=join_form %}
+  </section>
+</div>
+{% endif %}
+{% endblock %}
 {% block aside_extra %}
 <section class="ws-stat ws-stat--featured" aria-labelledby="next-step">
   <span class="ws-stat__label" id="next-step">Next step</span>
+  {% if wedding %}
   <span class="ws-module__name">Bring your coordinator in</span>
-  <span class="ws-stat__meta">Once wedding workspaces open, you'll share an event code so your coordinator and vendors can join.</span>
+  <span class="ws-stat__meta">Share your event code. Your partner and coordinator type it on their dashboard to join.</span>
+  {% else %}
+  <span class="ws-module__name">Start your wedding workspace</span>
+  <span class="ws-stat__meta">Create the wedding, or join the one your partner already created with its event code.</span>
+  {% endif %}
 </section>
 {% endblock %}

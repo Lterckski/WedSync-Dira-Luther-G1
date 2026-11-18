@@ -1,0 +1,25 @@
+{% extends "layouts/app.html" %}
+{% block title %}{{ page_title }}{% endblock %}
+{% block content %}
+<header class="ws-page-head">
+  <div>
+    <p class="ws-eyebrow"><a href="{% url 'weddings:detail' wedding.pk %}">{{ wedding.title }}</a></p>
+    <h1 class="ws-page-title">{{ heading }}</h1>
+  </div>
+</header>
+<section class="ws-card ws-card--narrow" aria-label="Confirm">
+  <form method="post" novalidate>
+    {% csrf_token %}
+    <div class="ws-card__body">
+      <div class="ws-alert ws-alert--warning" role="note">
+        {% include "icons/warning.svg" %}
+        <div class="ws-alert__body">{{ message }}</div>
+      </div>
+    </div>
+    <footer class="ws-card__footer">
+      <a class="ws-btn ws-btn--secondary" href="{{ cancel_url }}">Cancel</a>
+      <button class="ws-btn ws-btn--danger" type="submit" data-pending-label="{{ pending_label }}">{{ confirm_label }}</button>
+    </footer>
+  </form>
+</section>
+{% endblock %}

@@ -1,7 +1,8 @@
 """
 What each role will be able to do, taken from the SDD feature list (Section 2.2)
 and business rules (Section 3.1). Shown on each dashboard so every role sees
-the tools that belong to it. These open in later phases of the project.
+the tools that belong to it. Tools open phase by phase; AVAILABLE_FEATURES lists
+the ones each role can use now.
 """
 from accounts.models import Role
 
@@ -35,4 +36,11 @@ ROLE_INTROS = {
     Role.COUPLE: "Everything for your wedding will live here — budget, guests, vendors and the day itself.",
     Role.COORDINATOR: "Your weddings, vendors and run-of-show schedules will live here.",
     Role.VENDOR: "The weddings you're booked for, your contracts and your call times will live here.",
+}
+
+# Features each role can already use (the rest are marked "Coming soon").
+AVAILABLE_FEATURES = {
+    Role.COUPLE: {"F-02"},
+    Role.COORDINATOR: {"F-02"},
+    Role.VENDOR: set(),
 }

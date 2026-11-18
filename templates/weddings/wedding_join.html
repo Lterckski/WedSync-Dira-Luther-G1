@@ -1,0 +1,14 @@
+{% extends "layouts/app.html" %}
+{% block title %}Join a wedding{% endblock %}
+{% block content %}
+<header class="ws-page-head">
+  <div>
+    <p class="ws-eyebrow"><a href="{% url 'dashboards:home' %}">{% if user.role == "COORDINATOR" %}Weddings{% else %}My wedding{% endif %}</a></p>
+    <h1 class="ws-page-title">Join a wedding</h1>
+    <p class="ws-page-lede">Type the event code the couple shared with you. Upper or lower case and spaces are fine.</p>
+  </div>
+</header>
+<section class="ws-card ws-card--narrow" aria-label="Event code">
+  {% include "weddings/_join_form.html" %}
+</section>
+{% endblock %}

@@ -294,6 +294,20 @@ textarea.ws-input { min-height: 96px; resize: vertical; }
 .ws-toolbar .ws-field--narrow { flex: 0 1 170px; }
 .ws-pagination { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: var(--space-3); padding: var(--space-4) var(--space-5); border-top: 1px solid var(--border); font-size: 14px; color: var(--ink-muted); }
 .ws-pagination__links { display: flex; gap: var(--space-2); }
+.ws-table__actions { text-align: right; white-space: nowrap; }
+.ws-card__body--flush { padding: var(--space-5) 0 var(--space-2); }
+
+/* ---------- Layout helpers ---------- */
+.ws-card--form { max-width: 720px; }
+.ws-card--narrow { max-width: 560px; }
+.ws-stack--tight { gap: var(--space-4); }
+.ws-section { margin-bottom: var(--space-5); }
+.ws-min-0 { min-width: 0; }
+.ws-page-meta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); margin-top: var(--space-2); color: var(--ink-muted); }
+
+/* ---------- Event code (wedding workspace) ---------- */
+.ws-code { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-3); padding: var(--space-3) var(--space-4); border: 1px dashed var(--border-control); border-radius: var(--radius-md); background: var(--surface-0); }
+.ws-code__value { font-family: ui-monospace, "SFMono-Regular", Consolas, monospace; font-size: 24px; line-height: 32px; font-weight: 600; letter-spacing: 0.18em; color: var(--ink); }
 
 /* ---------- Auth layout ---------- */
 .ws-auth { display: grid; grid-template-columns: 5fr 7fr; min-height: 100vh; min-height: 100dvh; }
