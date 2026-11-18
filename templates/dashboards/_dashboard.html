@@ -7,17 +7,21 @@
     <p class="ws-page-lede">{{ intro }}</p>
   </div>
 </header>
+{% block lead %}{% endblock %}
 <div class="ws-split">
   <section class="ws-card" aria-labelledby="tools-title">
     <header class="ws-card__header">
       <h2 class="ws-card__title" id="tools-title">{% block tools_title %}Your tools{% endblock %}</h2>
-      <span class="ws-badge ws-badge--neutral">Opening in the next phases</span>
+      <span class="ws-badge ws-badge--neutral">More opening in the next phases</span>
     </header>
     <div class="ws-card__body">
       <ul class="ws-modules">
         {% for name, description, feature_id in modules %}
         <li class="ws-module">
-          <span class="ws-module__name">{{ name }}</span>
+          <span class="ws-module__head">
+            <span class="ws-module__name">{{ name }}</span>
+            {% if feature_id in available_features %}<span class="ws-badge ws-badge--success">Open</span>{% else %}<span class="ws-badge ws-badge--neutral">Coming soon</span>{% endif %}
+          </span>
           <span class="ws-module__text">{{ description }}</span>
         </li>
         {% endfor %}

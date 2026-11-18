@@ -2,6 +2,44 @@
 {% block title %}Weddings{% endblock %}
 {% block eyebrow %}Coordinator dashboard{% endblock %}
 {% block tools_title %}Running your weddings{% endblock %}
+{% block lead %}
+<div class="ws-split ws-section">
+  <section class="ws-card" aria-labelledby="weddings-title">
+    <header class="ws-card__header">
+      <h2 class="ws-card__title" id="weddings-title">Your weddings</h2>
+      <span class="ws-badge ws-badge--neutral">{{ weddings|length }}</span>
+    </header>
+    {% if weddings %}
+    <div class="ws-card__body ws-card__body--flush">
+      <div class="ws-table-wrap">
+        <table class="ws-table">
+          <thead><tr><th scope="col">Wedding</th><th scope="col">Date</th><th scope="col">Couple</th><th scope="col">Status</th></tr></thead>
+          <tbody>
+            {% for wedding in weddings %}
+            <tr>
+              <td><a class="ws-table__name" href="{% url 'weddings:detail' wedding.pk %}">{{ wedding.title }}</a></td>
+              <td class="ws-num">{{ wedding.wedding_date|date:"j M Y" }}</td>
+              <td>{% for member in wedding.couple_members %}{{ member.user.full_name }}{% if not forloop.last %} &amp; {% endif %}{% empty %}<span class="ws-muted">—</span>{% endfor %}</td>
+              <td>{% include "weddings/_status_badge.html" %}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    {% else %}
+    <div class="ws-empty">
+      <p class="ws-empty__title">No weddings yet</p>
+      <p class="ws-empty__text">Ask a couple for their event code and enter it here. Each wedding you join shows up in this list.</p>
+    </div>
+    {% endif %}
+  </section>
+  <section class="ws-card" aria-labelledby="join-title">
+    <header class="ws-card__header"><h2 class="ws-card__title" id="join-title">Join a wedding</h2></header>
+    {% include "weddings/_join_form.html" with form=join_form %}
+  </section>
+</div>
+{% endblock %}
 {% block aside_extra %}
 <section class="ws-stat ws-stat--featured" aria-labelledby="next-step">
   <span class="ws-stat__label" id="next-step">On the day</span>
